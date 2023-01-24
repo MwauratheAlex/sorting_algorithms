@@ -3,9 +3,22 @@
 
 #include <stdio.h>
 
+/**
+ * struct listint - doubly linked list
+ *
+ * @n: integer
+ *
+ * @next: pointer to next node
+ *
+ * @prev: pointer to previous node
+ *
+ * Description: Doubly linked list
+ *
+ */
 typedef struct listint
 {
 	int n;
+	struct listint *prev;
 	struct listint *next;
 } listint_t;
 
