@@ -1,6 +1,8 @@
 #ifndef SORT_H
 #define SORT_H
 
+#include <stdio.h>
+
 typedef struct listint
 {
 	int n;
