@@ -1,6 +1,46 @@
 #include "sort.h"
 
 /**
+ * swap - swaps two nodes
+ *
+ * @a: first node
+ *
+ * @b: last node
+ *
+ * @head: head node
+ *
+ * Return: nothing
+ */
+
+void swap(listint_t *head, listint_t *a, listint_t *b)
+{
+	listint_t *temp;
+
+	if (head == NULL || a == NULL || b == NULL)
+		return;
+	temp = a->prev;
+	a->prev = b->prev;
+	b->prev = temp;
+	if (a->prev)
+		a->prev->next = a;
+	if (b->prev)
+		b->prev->next = b;
+	temp = a->next;
+	a->next = b->next;
+	b->next = temp;
+	if (a->next)
+		a->next->prev = a;
+	if (b->next)
+		b->next->prev = b;
+
+	if (a == head)
+		head = b;
+	else if (b == head)
+		head = a;
+}
+
+
+/**
  * insertion_sort_list - sorts a doubly linked list of integers in ascending
  * order using the Insertion sort algorithm
  *
@@ -10,49 +50,28 @@
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *previous_node = (*list);
-	listint_t *current_node = previous_node->next;
-	listint_t *buffer = NULL;
+	listint_t *current, *temp;
+	int swapped = 0;
 
-	while (current_node)
+	if (*list == NULL)
+		return;
+	current = (*list)->next;
+
+	while (current != NULL)
 	{
-		previous_node = current_node;
-		if (current_node->next)
-			current_node = previous_node->next;
-		else
-			break;
-
-		if (current_node->n < previous_node->n)
+		temp = current;
+		while (temp != *list && temp->n < temp->prev->n)
 		{
-			buffer = current_node;
-			previous_node->next = buffer->next;
-			if (buffer->next)
-				buffer->next->prev = previous_node;
-			current_node = previous_node;
-
-			while (previous_node && buffer)
-			{
-				previous_node = previous_node->prev;
-				if (previous_node && previous_node->n < buffer->n)
-				{
-					previous_node->next->prev = buffer;
-					buffer->next = previous_node->next;
-					buffer->prev = previous_node;
-					previous_node->next = buffer;
-					previous_node = current_node->prev;
-					buffer = NULL;
-					print_list(*list);
-				}
-				if (previous_node == NULL)
-				{
-					buffer->next = *list;
-					buffer->prev = NULL;
-					*list = buffer;
-					previous_node = current_node->prev;
-					buffer = NULL;
-					print_list(*list);
-				}
-			}
+			swap(*list, temp->prev, temp);
+			print_list(*list);
+			temp = temp->prev;
+			swapped = 1;
 		}
+		if (temp == *list)
+			*list = temp;
+		if (swapped == 1)
+			swapped = 0;
+		else
+			current = current->next;
 	}
 }
